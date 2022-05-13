@@ -52,6 +52,10 @@ class Cwui_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		/**
+		 * Adição do menu na dashboard admin
+		 */
+		add_action( 'admin_menu', array( $this, 'registerDashboardMenu' ) );
 	}
 
 	/**
@@ -99,5 +103,32 @@ class Cwui_Admin {
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/cwui-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
+
+		/**
+	 * Registro do menu na dashboard wordpress
+	 * 
+	 */
+	public function registerDashboardMenu()
+	{
+
+		$pageTitle 	= 'Customize Wordpress UI';
+		$menuTitle 	= 'Customize Wordpress UI';
+		$capability = '10';
+		$menuSlug 	= 'cwui-admin';
+		$iconUrl 	= 'dashicons-layout';
+		$position	= '20';
+
+		add_menu_page( $pageTitle, $menuTitle, $capability, $menuSlug, array( $this, 'cbCwuiPage' ), $iconUrl, $position );
+	}
+
+	/**
+	 * Callback para página do plugin
+	 * 
+	 */
+	public function cbCwuiPage()
+	{
+		require_once plugin_dir_path( __FILE__ ) . 'partials/cwui-admin-display.php';
+	}
+
 
 }
