@@ -56,6 +56,31 @@ class Cwui_Admin {
 		 * Adição do menu na dashboard admin
 		 */
 		add_action( 'admin_menu', array( $this, 'registerDashboardMenu' ) );
+
+		/**
+		 * Registrando o grupo de configurações para o formulário da página
+		 */
+		add_action( 'admin_init', [ $this, 'registerSettingsOptionGroup' ] );
+
+		/**
+		 * Customizar página de login
+		 */
+		add_action( 'login_enqueue_scripts', [ $this, 'customizeAdminLoginPage' ] );
+
+		/**
+		 * Customizar Footer da página de login
+		 */
+		add_action( 'login_footer', [ $this, 'customizeFooter' ] );
+
+		/**
+		 * Customizar link no logotipo da página de login
+		 */
+		add_filter( 'login_headerurl', [ $this, 'customizeLogoLink'] );
+
+		/**
+		 * Customizar texto no logotipo da página de login
+		 */
+		add_filter( 'login_headertext', [ $this, 'customizeLogoText'] );
 	}
 
 	/**
@@ -130,5 +155,121 @@ class Cwui_Admin {
 		require_once plugin_dir_path( __FILE__ ) . 'partials/cwui-admin-display.php';
 	}
 
+	/**
+	 * Registrando o grupo de options para validar a submissão do form de configurações
+	 * 
+	 */
+	public function registerSettingsOptionGroup()
+	{
+		$settingsGroup 		= '_cwui_settings';
+		$optionsGroup 		= [
+			'_cwui_background_login_page',
+			'_cwui_url_logotipo',
+			'_cwui_height_logotipo',
+			'_cwui_width_logotipo',
+			'_cwui_padding_logotipo',
+			'_cwui_margin_logotipo',
+			'_cwui_show_link_wordpress',
+			'_cwui_footer_text',
+			'_cwui_footer_text_classes',
+			'_cwui_footer_text_style',
+			'_cwui_footer_text_container_classes',
+			'_cwui_footer_text_container_style',
+		];
 
+		foreach( $optionsGroup as $option ){
+			register_setting( $settingsGroup, $option );
+		}
+
+	}
+
+	/**
+	 * Customizar a página de login "/wp-login.php"
+	 * 
+	 * @hook
+	 */
+	public function customizeAdminLoginPage()
+	{
+		$sufix 			= 'px';
+		$bodyBgColor	= get_option('_cwui_background_login_page');
+		$logoUrl 		= get_option('_cwui_url_logotipo');
+		$height 		= get_option('_cwui_height_logotipo') . $sufix;
+		$width 			= get_option('_cwui_width_logotipo') . $sufix;
+		$padding 		= get_option('_cwui_padding_logotipo');
+		$margin 		= get_option('_cwui_margin_logotipo');
+		$showLink 		= get_option('_cwui_show_link_wordpress');
+		$bgSize 		= $width . ' ' . $height;
+		$bgRepeat 		= 'no-repeat';
+		?>
+		<style type="text/css">
+			/* Substituindo a logotipo */
+			#login h1 a, .login h1 a {
+				background-image: url(<?php echo $logoUrl; ?>);
+				background-size: <?php echo $bgSize; ?>;
+				background-repeat: <?php echo $bgRepeat; ?>;
+				height: <?php echo $height; ?>;
+				width: <?php echo $width; ?>;
+				padding: <?php echo $padding; ?>;
+			}
+
+			/* Alterar cor do body */
+			<?php if( strlen($bodyBgColor) > 1 ): ?>
+				body{
+					background: <?php echo $bodyBgColor . ' !important'; ?>
+				}
+			<?php endif; ?>
+
+			/* Remover link #backtoblog */
+			<?php if( $showLink ): ?>
+				#backtoblog{
+					display: none !important;
+				}
+			<?php endif; ?>
+		</style>
+		<?php
+	}
+
+	/**
+	 * Customizar o link no logotipo da página de login "/wp-login.php"
+	 * 
+	 * @filter 	login_headerurl
+	 */
+	public function customizeLogoLink()
+	{
+		$link = get_site_url();
+		
+		return $link;
+	}
+
+	/**
+	 * Customizar Texto dentro do link da logotipo na página de login "/wp-login.php"
+	 * 
+	 * @filter login_headertext
+	 */
+	public function customizeLogoText()
+	{
+		$siteName = get_bloginfo( 'name' );
+
+		return $siteName;
+	}
+
+	/**
+	 * Customizar rodapé da página de login
+	 * 
+	 * @action 	login_footer
+	 */
+	public function customizeFooter()
+	{
+		$text 			= get_option( '_cwui_footer_text' );
+		$classText 		= get_option( '_cwui_footer_text_classes' );
+		$styleText 		= get_option( '_cwui_footer_text_style' );
+		$classContainer = get_option( '_cwui_footer_text_container_classes' );
+		$styleContainer = get_option( '_cwui_footer_text_container_style' );
+
+		$output = '<div '. ( strlen($classContainer) > 0 ? 'class="'. $classContainer .'"' : '' ) .' '. ( strlen($styleContainer) > 1 ? 'style="'. $styleContainer .'"' : '') .'>
+				<p '. ( strlen($classText) > 0 ? 'class="'. $classText .'"' : '' ) .' '. ( strlen($styleText) > 1 ? 'style="'. $styleText .'"' : '') .'>'. $text .'</p>
+			</div>';
+
+		echo $output;
+	}
 }
