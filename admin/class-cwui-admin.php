@@ -81,6 +81,31 @@ class Cwui_Admin {
 		 * Customizar texto no logotipo da página de login
 		 */
 		add_filter( 'login_headertext', [ $this, 'customizeLogoText'] );
+
+		/**
+		 * Customizar #wpadminbar
+		 */
+		add_action( 'wp_before_admin_bar_render', [ $this, 'customizeWpAdminBar' ] );
+
+		/**
+		 * Substituir nome "Betheme" no menu
+		 */
+		add_action( 'admin_init', [ $this, 'customizeBethemeNameOnMenu'] );
+
+		/**
+		 * Substituir texto no rodapé da dashboard
+		 */
+		add_filter( 'admin_footer_text', [ $this, 'customizeDashboardFooterText'] );
+
+		/**
+		 * Customizar widgets na dashboard admin
+		 */
+		add_filter( 'wp_dashboard_setup', [ $this, 'removeDashboardWidgets' ] );
+
+		/**
+		 * Add widgets na dashboard admin
+		 */
+		add_action( 'wp_dashboard_setup',[ $this, 'dashboardAddWidgets' ] );
 	}
 
 	/**
@@ -175,6 +200,15 @@ class Cwui_Admin {
 			'_cwui_footer_text_style',
 			'_cwui_footer_text_container_classes',
 			'_cwui_footer_text_container_style',
+			'_cwui_url_logotipo_icon',
+			'_cwui_url_logotipo_icon_footer',
+			'_cwui_url_text_footer',
+			'_cwui_url_betheme_menu_logo_replace',
+			'_cwui_betheme_menu_label_replace',
+			'_cwui_widget_welcome_image_url',
+			'_cwui_widget_welcome_title',
+			'_cwui_widget_contact_title',
+			'_cwui_widget_contact_content',
 		];
 
 		foreach( $optionsGroup as $option ){
@@ -271,5 +305,139 @@ class Cwui_Admin {
 			</div>';
 
 		echo $output;
+	}
+
+	/**
+	 * Customizar Logotipo(#wp-admin-bar-wp-logo) e esconder submenu(.ab-sub-wrapper) na #wpadminbar
+	 * Dashboard Admin
+	 * 
+	 */
+	public function customizeWpAdminBar()
+	{
+		$iconUrl			= get_option( '_cwui_url_logotipo_icon' );
+		$iconBethemeLabel	= get_option( '_cwui_url_betheme_menu_logo_replace' );
+		?>
+		<style type="text/css">
+			#wpadminbar #wp-admin-bar-wp-logo > .ab-item .ab-icon:before{
+				content: url('<?php echo $iconUrl ?>') !important;
+				top: 2px;
+			}
+			#wpadminbar #wp-admin-bar-wp-logo > a.ab-item{
+				pointer-events: none;
+				cursor: default;
+			}
+			#wpadminbar #wp-admin-bar-wp-logo div.ab-sub-wrapper{
+				display: none !important;
+			}
+
+			<?php if( strlen($iconBethemeLabel) > 1 ):?>
+				#toplevel_page_betheme a.menu-top div.wp-menu-image{
+					background-image: url( <?php echo $iconBethemeLabel ?>) !important;
+				}
+			<?php endif; ?>
+		</style>
+		<?php
+	}
+
+	/**
+	 * Customizar/Substituir o nome "Betheme" no menu
+	 * Dashboard Admin > Admin Menu
+	 */
+	public function customizeBethemeNameOnMenu()
+	{
+		global $menu;
+		$label 		= get_option( '_cwui_betheme_menu_label_replace' );
+		
+		// Define your changes here
+		if( strlen($label) > 1 ){
+			$updates = array(
+				"Betheme" => array(
+					'name' => __( $label, 'textdomain' )
+				)
+			);
+		
+			foreach ($menu as $k => $props) {
+		
+				// Check for new values
+				$new_values = (isset($updates[$props[0]])) ? $updates[$props[0]] : false;
+				if (!$new_values) continue;
+		
+				// Change menu name
+				$menu[$k][0] = $new_values['name'];
+			}
+		}
+	}
+
+	/**
+	 * Customizar Texto localizado no rodapé da dashboard wp
+	 * 
+	 * @filter	admin_footer_text
+	 */
+	public function customizeDashboardFooterText()
+	{
+		$iconUrl 	= get_option('_cwui_url_logotipo_icon_footer');
+		$text 		= get_option('_cwui_url_text_footer');
+
+		$output 	= '';
+		if( strlen($iconUrl) > 1 ){
+			$output .= '<img style="width: 20px; height: 20px; margin-right: 4px" src="'. $iconUrl .'" alt="">';
+		}
+
+		if( strlen($text) > 1 ){
+			$output .= '<span>'. $text .'</span>';
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Customizar Widgets na dashboard inicial
+	 * 
+	 * @filter	default_hidden_meta_boxes
+	 */
+	public function removeDashboardWidgets()
+	{
+		remove_action( 'welcome_panel', 'wp_welcome_panel' ); // Welcome Panel
+		remove_meta_box( 'dashboard_primary', 'dashboard', 'side' ); # Novidades e eventos
+		remove_meta_box( 'dashboard_quick_press', 'dashboard', 'side' ); # Rascunho rápido 
+		remove_meta_box( 'dashboard_activity', 'dashboard', 'normal' ); # Atividade
+		remove_meta_box( 'dashboard_right_now', 'dashboard', 'normal' ); # Agora
+		remove_meta_box( 'dashboard_site_health', 'dashboard', 'normal' ); # Status do diagnóstico
+	}
+
+	/**
+	 * Adição de novos widgets customs na dashboard admin
+	 * 
+	 * @action 	wp_dashboard_setup
+	 */
+	public function dashboardAddWidgets()
+	{
+		$widgetTitle 		= get_option( '_cwui_widget_welcome_title' );
+		$widgetContactTitle = get_option( '_cwui_widget_contact_title' );
+		if( strlen($widgetTitle) > 1 ){
+			wp_add_dashboard_widget( 'cwui_dashboard_welcome', __( $widgetTitle, 'textodmain' ), [ $this, 'customWidgetForDashboard' ] );
+		}
+
+		if( strlen($widgetContactTitle) ){
+			wp_add_dashboard_widget( 'cwui_dashboard_contact', __( $widgetContactTitle, 'textdomain' ), [ $this, 'customWidgetDashboardContact'] );
+		}
+	}
+
+	/**
+	 * Callback Welcome widget dashboard
+	 */
+	public function customWidgetForDashboard() 
+	{
+		$imgUrl = get_option( '_cwui_widget_welcome_image_url' );
+		_e( '<img style="max-width: 100%; "src="'. $imgUrl .'">', 'textdomain' );
+	}
+
+	/**
+	 * Callback Contact Widget Dashboard
+	 */
+	public function customWidgetDashboardContact()
+	{
+		$contactContent = get_option( '_cwui_widget_contact_content' );
+		_e( $contactContent, 'textdomain' );
 	}
 }
