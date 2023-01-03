@@ -191,6 +191,7 @@ class Cwui_Admin {
 	{
 		$settingsGroup 		= '_cwui_settings';
 		$optionsGroup 		= [
+            # Login Page
 			'_cwui_background_login_page',
 			'_cwui_url_logotipo',
 			'_cwui_height_logotipo',
@@ -211,6 +212,7 @@ class Cwui_Admin {
 			'_cwui_footer_text_style',
 			'_cwui_footer_text_container_classes',
 			'_cwui_footer_text_container_style',
+            # Icon Logotipo
 			'_cwui_url_logotipo_icon',
 			'_cwui_url_logotipo_icon_footer',
 			'_cwui_url_text_footer',
