@@ -155,6 +155,61 @@
                         <h3 class=""><?php _e( 'Painel Administrativo', 'cwui' ); ?></h3>
                     </tr>
                     <tr>
+                        <th scope="row"><?php _e( 'URL do logotipo para o menu Wordpress', 'cwui' ); ?></th>
+                        <td>
+                            <div class="d-block mb-2">
+                                <input type="url" name="_cwui_menu_logotipo_url" id="_cwui_menu_logotipo_url" class="" value="<?php echo get_option( '_cwui_menu_logotipo_url' ) != false ? get_option( '_cwui_menu_logotipo_url' ) : ''; ?>">
+                            </div>
+                            <label for="_cwui_menu_logotipo_url" class="d-block mb-1"><?php _e( 'Logotipo apresentado no topo do menu do wordpress', 'cwui' ); ?></label>
+                            <span><i><?php _e( 'Dica: Você pode enviar a imagem desejada para a biblioteca do wordpress e depois copiar a URL dela e colar aqui.') ?></i></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php _e( 'Altura e Largura do Logotipo', 'cwui' ); ?></th>
+                        <td>
+                            <div class="d-block mb-4">
+                                <div class="">
+                                    <input type="number" name="_cwui_menu_logotipo_height" id="_cwui_menu_logotipo_height" class="" value="<?php echo get_option( '_cwui_menu_logotipo_height' ) != false ? get_option( '_cwui_menu_logotipo_height' ) : ''; ?>">
+                                </div>
+                                <label for="_cwui_menu_logotipo_height" class="d-block mb-1"><?php _e( 'Altura(px)', 'cwui' ); ?></label>
+                            </div>
+                            <div class="d-block mb-2">
+                                <div class="">
+                                    <input type="number" name="_cwui_menu_logotipo_width" id="_cwui_menu_logotipo_width" class="" value="<?php echo get_option( '_cwui_menu_logotipo_width' ) != false ? get_option( '_cwui_width_logotipo' ) : ''; ?>">
+                                </div>
+                                <label for="_cwui_menu_logotipo_width" class="d-block mb-1"><?php _e( 'Largura(px)', 'cwui' ); ?></label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php _e( 'Espaçamento interno <i>(padding)</i>', 'cwui' ); ?></th>
+                        <td>
+                            <div class="d-block mb-2">
+                                <input type="text" name="_cwui_menu_logotipo_padding" id="_cwui_menu_logotipo_padding" class="" value="<?php echo get_option( '_cwui_menu_logotipo_padding' ) != false ? get_option( '_cwui_menu_logotipo_padding' ) : ''; ?>">
+                            </div>
+                            <label for="_cwui_menu_logotipo_padding" class="d-block mb-1"><?php _e( 'Por Exemplo: 10px(top), 20px(right), 10px(bottom), 20px(left)', 'cwui' ); ?></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php _e( 'Espaçamento externo <i>(margin)</i>', 'cwui' ); ?></th>
+                        <td>
+                            <div class="d-block mb-2">
+                                <input type="text" name="_cwui_menu_logotipo_margin" id="_cwui_menu_logotipo_margin" class="" value="<?php echo get_option( '_cwui_menu_logotipo_margin' ) != false ? get_option( '_cwui_menu_logotipo_margin' ) : ''; ?>">
+                            </div>
+                            <label for="_cwui_menu_logotipo_margin" class="d-block mb-1"><?php _e( 'Por Exemplo: 10px(top), 20px(right), 10px(bottom), 20px(left)', 'cwui' ); ?></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php _e( 'Mostrar Logotipo', 'cwui' ); ?></th>
+                        <td>
+                            <div class="d-block mb-2">
+                                <input type="checkbox" name="_cwui_menu_logotipo_show" id="_cwui_menu_logotipo_show" class="" <?php echo get_option( '_cwui_menu_logotipo_show' ) != false ? 'checked' : ''; ?>>
+                            </div>
+                            <label for="_cwui_menu_logotipo_show" class="d-block mb-1"><?php _e( 'Marque está opção para mostrar o logotipo no topo do menu', 'cwui' ); ?></label>
+                        </td>
+                    </tr>
+
+                    <tr>
                         <th scope="row"><?php _e( 'URL do Ícone Top(20 x 20px)', 'cwui' ); ?></th>
                         <td>
                             <div class="d-block mb-2">

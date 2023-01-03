@@ -197,6 +197,14 @@ class Cwui_Admin {
 			'_cwui_width_logotipo',
 			'_cwui_padding_logotipo',
 			'_cwui_margin_logotipo',
+            # Admin Menu Logotipo
+            '_cwui_menu_logotipo_url',
+            '_cwui_menu_logotipo_height',
+            '_cwui_menu_logotipo_width',
+            '_cwui_menu_logotipo_padding',
+            '_cwui_menu_logotipo_margin',
+            '_cwui_menu_logotipo_show',
+            # Footer Admin
 			'_cwui_show_link_wordpress',
 			'_cwui_footer_text',
 			'_cwui_footer_text_classes',
