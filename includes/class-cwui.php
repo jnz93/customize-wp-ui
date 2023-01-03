@@ -121,6 +121,11 @@ class Cwui {
 		 * side of the site.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-cwui-public.php';
+		
+        /**
+         * Classe responsável pela customização do painel admin
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-cwui-adminPanel.php';
 
 		$this->loader = new Cwui_Loader();
 

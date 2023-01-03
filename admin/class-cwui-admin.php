@@ -52,6 +52,9 @@ class Cwui_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+        # Instânciando classes
+        new Cwui_AdminPanel();
+        
 		/**
 		 * Adição do menu na dashboard admin
 		 */
