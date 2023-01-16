@@ -54,6 +54,7 @@ class Cwui_Admin {
 
         # Instânciando classes
         new Cwui_AdminPanel();
+        new Cwui_Widgets();
         
 		/**
 		 * Adição do menu na dashboard admin
@@ -104,11 +105,6 @@ class Cwui_Admin {
 		 * Customizar widgets na dashboard admin
 		 */
 		add_filter( 'wp_dashboard_setup', [ $this, 'removeDashboardWidgets' ] );
-
-		/**
-		 * Add widgets na dashboard admin
-		 */
-		add_action( 'wp_dashboard_setup',[ $this, 'dashboardAddWidgets' ] );
 	}
 
 	/**
@@ -218,10 +214,12 @@ class Cwui_Admin {
 			'_cwui_url_text_footer',
 			'_cwui_url_betheme_menu_logo_replace',
 			'_cwui_betheme_menu_label_replace',
+            # Widgets
 			'_cwui_widget_welcome_image_url',
 			'_cwui_widget_welcome_title',
 			'_cwui_widget_contact_title',
 			'_cwui_widget_contact_content',
+            '_cwui_widget_sysinfo_title'
 		];
 
 		foreach( $optionsGroup as $option ){
@@ -416,41 +414,5 @@ class Cwui_Admin {
 		remove_meta_box( 'dashboard_activity', 'dashboard', 'normal' ); # Atividade
 		remove_meta_box( 'dashboard_right_now', 'dashboard', 'normal' ); # Agora
 		remove_meta_box( 'dashboard_site_health', 'dashboard', 'normal' ); # Status do diagnóstico
-	}
-
-	/**
-	 * Adição de novos widgets customs na dashboard admin
-	 * 
-	 * @action 	wp_dashboard_setup
-	 */
-	public function dashboardAddWidgets()
-	{
-		$widgetTitle 		= get_option( '_cwui_widget_welcome_title' );
-		$widgetContactTitle = get_option( '_cwui_widget_contact_title' );
-		if( strlen($widgetTitle) > 1 ){
-			wp_add_dashboard_widget( 'cwui_dashboard_welcome', __( $widgetTitle, 'textodmain' ), [ $this, 'customWidgetForDashboard' ] );
-		}
-
-		if( strlen($widgetContactTitle) ){
-			wp_add_dashboard_widget( 'cwui_dashboard_contact', __( $widgetContactTitle, 'textdomain' ), [ $this, 'customWidgetDashboardContact'] );
-		}
-	}
-
-	/**
-	 * Callback Welcome widget dashboard
-	 */
-	public function customWidgetForDashboard() 
-	{
-		$imgUrl = get_option( '_cwui_widget_welcome_image_url' );
-		_e( '<img style="max-width: 100%; "src="'. $imgUrl .'">', 'textdomain' );
-	}
-
-	/**
-	 * Callback Contact Widget Dashboard
-	 */
-	public function customWidgetDashboardContact()
-	{
-		$contactContent = get_option( '_cwui_widget_contact_content' );
-		_e( $contactContent, 'textdomain' );
 	}
 }

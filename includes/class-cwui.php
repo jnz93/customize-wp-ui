@@ -127,6 +127,11 @@ class Cwui {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-cwui-adminPanel.php';
 
+        /**
+         * Classe responsável pelos widgets
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-cwui-widgets.php';
+
 		$this->loader = new Cwui_Loader();
 
 	}
